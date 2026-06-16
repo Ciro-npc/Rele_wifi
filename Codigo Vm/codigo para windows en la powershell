@@ -1,0 +1,13 @@
+param([string]$IsoPath)
+
+$vmxPath = "C:\VMs\MiVM\MiVM.vmx"
+$vmwarePlayer = "C:\Program Files (x86)\VMware\VMware Player\vmplayer.exe"
+
+# Modificar el .vmx para apuntar al ISO
+$content = Get-Content $vmxPath
+$content = $content -replace 'ide1:0.fileName = ".*"', "ide1:0.fileName = `"$IsoPath`""
+$content = $content -replace 'ide1:0.present = "FALSE"', 'ide1:0.present = "TRUE"'
+Set-Content $vmxPath $content
+
+# Arrancar la VM
+Start-Process $vmwarePlayer $vmxPath
